@@ -56,9 +56,6 @@
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  width: 47.5%;
-  padding: 15px;
-  background-color: rgb(50, 195, 205);
 }
 
 .dragactive {
@@ -114,7 +111,6 @@
   margin-left: 10px;
   font-size: 25px;
   cursor: pointer;
-  color: black;
 }
 
 @media (max-width: 1100px) {
@@ -135,11 +131,4 @@
     width: 95%;
     margin-bottom: 10px;
   }
-}
-.inlineIcons {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* optional spacing between icons */
-  justify-content: space-between;
-  align-items: center;
 }
