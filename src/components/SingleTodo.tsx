@@ -4,14 +4,16 @@ import Tick from "../icons/Tick";
 import Delete from "../icons/Delete";
 import Edit from "../icons/Edit";
 import "./styles.css";
+import { Draggable } from "@hello-pangea/dnd";
 
 interface Props {
+  index: number;
   t: Todo;
   todos: Todo[];
   setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
-const SingleTodo: React.FC<Props> = ({ t, todos, setTodos }) => {
+const SingleTodo: React.FC<Props> = ({ index, t, todos, setTodos }) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [editTodo, setEditTodo] = useState<string | number>(t.todo);
 
@@ -41,39 +43,49 @@ const SingleTodo: React.FC<Props> = ({ t, todos, setTodos }) => {
   }, [edit]);
 
   return (
-    <form className="todos__single" onSubmit={(e) => handleEdit(e, t.id)}>
-      {edit ? (
-        <input
-          ref={inputRef}
-          value={editTodo}
-          onChange={(e) => setEditTodo(e.target.value)}
-          className="todos__single--text"
-        />
-      ) : t.isDone ? (
-        <s className="todos__single--text">{t.todo}</s>
-      ) : (
-        <span className="todos__single--text">{t.todo}</span>
-      )}
-
-      <div className="inlineIcons">
-        <span
-          onClick={() => {
-            if (!edit && !t.isDone) {
-              setEdit(!edit);
-            }
-          }}
-          className="icon"
+    <Draggable draggableId={t.id.toString()} index={index}>
+      {(provided) => (
+        <form
+          className="todos__single"
+          onSubmit={(e) => handleEdit(e, t.id)}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
         >
-          <Edit />
-        </span>
-        <span onClick={() => handleDone(t.id)} className="icon">
-          <Tick />
-        </span>
-        <span onClick={() => handleDelete(t.id)} className="icon">
-          <Delete />
-        </span>
-      </div>
-    </form>
+          {edit ? (
+            <input
+              ref={inputRef}
+              value={editTodo}
+              onChange={(e) => setEditTodo(e.target.value)}
+              className="todos__single--text"
+            />
+          ) : t.isDone ? (
+            <s className="todos__single--text">{t.todo}</s>
+          ) : (
+            <span className="todos__single--text">{t.todo}</span>
+          )}
+
+          <div className="inlineIcons">
+            <span
+              onClick={() => {
+                if (!edit && !t.isDone) {
+                  setEdit(!edit);
+                }
+              }}
+              className="icon"
+            >
+              <Edit />
+            </span>
+            <span onClick={() => handleDone(t.id)} className="icon">
+              <Tick />
+            </span>
+            <span onClick={() => handleDelete(t.id)} className="icon">
+              <Delete />
+            </span>
+          </div>
+        </form>
+      )}
+    </Draggable>
   );
 };
 
